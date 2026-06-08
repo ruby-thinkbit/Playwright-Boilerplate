@@ -1,0 +1,19 @@
+{
+  "name": "playwright-boilerplate",
+  "version": "1.0.0",
+  "description": "Production ready Playwright boilerplate with TypeScript, Page Object Model, and environment-based configuration.",
+  "main": "index.js",
+  "scripts": {
+    "test:stage": "TARGET_ENV=stage npx playwright test",
+    "test:prod": "TARGET_ENV=prod npx playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@types/node": "^25.9.2",
+    "dotenv": "^17.4.2"
+  }
+}
