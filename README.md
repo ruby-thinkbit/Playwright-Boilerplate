@@ -52,6 +52,36 @@ If you want to open the HTML report after tests:
 npx playwright show-report
 ```
 
+## Playwright MCP / AI agent support
+
+This boilerplate can work with Playwright MCP agents for AI-based test generation and healing.
+
+### Install Playwright MCP and Agents
+
+Run the following command to initialize Playwright agents in your project:
+
+```powershell
+npx playwright init-agents
+```
+
+This command will:
+- Install the Playwright MCP server
+- Generate agent files in `.github/agents/` directory:
+  - `playwright-test-generator.agent.md` - generates new test files
+  - `playwright-test-healer.agent.md` - debugs and fixes failing tests
+  - `playwright-test-planner.agent.md` - creates comprehensive test plans
+
+After initialization, these agent files will enable AI-assisted test creation and debugging features in your IDE.
+
+## Create tests
+
+Create new test files under `tests/` and use the Playwright test runner to execute them. Keep tests simple and readable by using page objects in `pages/`.
+
+Example structure:
+- `tests/login.spec.ts` for login scenarios
+- `pages/login.page.ts` for login page actions
+- `pages/inventory.page.ts` for inventory page actions
+
 ## Notes
 
 - Keep environment variables in a `.env` file if you use `dotenv`.

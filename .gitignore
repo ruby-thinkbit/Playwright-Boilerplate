@@ -7,3 +7,5 @@ node_modules/
 /playwright/.cache/
 /playwright/.auth/
 config
+.github/agents
+.github/workflows/copilot-setup-steps.yml
