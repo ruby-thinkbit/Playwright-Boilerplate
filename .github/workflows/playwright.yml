@@ -8,6 +8,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: stage
+    steps:
+      - name: Use variable from environment
+        run: echo "The BASE_URL is ${{ secrets.BASE_URL }}"
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
