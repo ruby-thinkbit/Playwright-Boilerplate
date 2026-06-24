@@ -14,6 +14,8 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
+    env:
+      CI: true
     steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
@@ -22,12 +24,17 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+      run: npx playwright install --with-deps chromium
     - name: Set up environment variables
       run: |
-        echo "BASE_URL=${{ secrets.BASE_URL }}" >> $GITHUB_ENV
-        echo "USER_EMAIL=${{ secrets.USER_EMAIL }}" >> $GITHUB_ENV
-        echo "USER_PASSWORD=${{ secrets.USER_PASSWORD }}" >> $GITHUB_ENV
+        if [ -f .env ]; then
+          set -a
+          source .env
+          set +a
+        fi
+        echo "BASE_URL=${BASE_URL:-${{ secrets.BASE_URL }}}" >> $GITHUB_ENV
+        echo "USER_EMAIL=${USER_EMAIL:-${{ secrets.USER_EMAIL }}}" >> $GITHUB_ENV
+        echo "USER_PASSWORD=${USER_PASSWORD:-${{ secrets.USER_PASSWORD }}}" >> $GITHUB_ENV
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4
