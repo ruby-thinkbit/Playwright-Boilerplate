@@ -1,57 +1,43 @@
-/*
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
+import { PasswordHelper } from '../helpers/generate_random';
 
-test('has title', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
-
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
-});
-
-test('get started link', async ({ page }) => {
-  await page.goto('https://playwright.dev/');
-
-  // Click the get started link.
-  await page.getByRole('link', { name: 'Get started' }).click();
-
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
-});
-*/
-
-import { test } from '@playwright/test';
-import { LoginPage } from '../pages/login.page';
-import { InventoryPage } from '../pages/inventory.page';
-import { Config } from '../config/env.config';
-
-test.describe('SauceDemo - Authentication Tests', () => {
+// Grouping related tests together
+test.describe('E-Commerce Login Functionality', () => {
   let loginPage: LoginPage;
-  let inventoryPage: InventoryPage;
 
+  // Runs before every single test in this block
   test.beforeEach(async ({ page }) => {
     loginPage = new LoginPage(page);
-    inventoryPage = new InventoryPage(page);
-    await loginPage.navigate();
+    await loginPage.navigateToLoginPage();
   });
 
-  test('Should successfully login with standard user', async () => {
-    const { username, password } = Config.users.standard;
-    
-    await loginPage.login(username, password);
-    await inventoryPage.verifyOnInventoryPage();
+  test('should successfully login with valid credentials', async ({ page }) => {
+    // Retrieve environment variables securely
+    const email = process.env.USER_EMAIL!;
+    const password = process.env.USER_PASSWORD!;
+
+    // Perform login action
+    await loginPage.login(email, password);
+
+    // Enterprise Web Assertion: Asserting user state change
+    // We expect the URL or title to change confirming successful login
+    await expect(page).toHaveTitle('My Account');
+    await expect(page).toHaveURL(/.*route=account\/account/);
   });
 
-  test('Should show error for locked out user', async () => {
-    const { username, password } = Config.users.lockedOut;
-    
-    await loginPage.login(username, password);
-    await loginPage.verifyErrorMessage('Sorry, this user has been locked out.');
-  });
+  test('should display error message with invalid credentials', async ({ page }) => {
+    // Retrieve environment variables securely
+    const email = process.env.USER_EMAIL!;
+    const password = PasswordHelper.generatePassword();
 
-  test('Should show static image for problem user', async () => {
-    const { username, password } = Config.users.problem;
-    
-    await loginPage.login(username, password);
-    await inventoryPage.verifyProductImage('Sauce Labs Backpack', '/static/media/sl-404.168b1cce10384b857a6f.jpg');
+    // Perform login action
+    await loginPage.login(email, password);
+
+    // Enterprise Web Assertion: Asserting user state change
+    // We expect the URL or title to change confirming successful login
+    await expect(page).toHaveTitle('Account Login');
+    await expect(page).toHaveURL(/.*route=account\/login/);
+    await expect(page.getByText('Warning: No match for E-Mail Address and/or Password.')).toBeVisible();
   });
 });

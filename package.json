@@ -1,19 +1,26 @@
 {
   "name": "playwright-boilerplate",
   "version": "1.0.0",
-  "description": "Production ready Playwright boilerplate with TypeScript, Page Object Model, and environment-based configuration.",
+  "description": "",
   "main": "index.js",
-  "scripts": {
-    "test:stage": "TARGET_ENV=stage npx playwright test",
-    "test:prod": "TARGET_ENV=prod npx playwright test"
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ruby-thinkbit/Playwright-Boilerplate.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ruby-thinkbit/Playwright-Boilerplate/issues"
+  },
+  "homepage": "https://github.com/ruby-thinkbit/Playwright-Boilerplate#readme",
   "devDependencies": {
-    "@playwright/test": "^1.60.0",
-    "@types/node": "^25.9.2",
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.0.0"
+  },
+  "dependencies": {
     "dotenv": "^17.4.2"
   }
 }
