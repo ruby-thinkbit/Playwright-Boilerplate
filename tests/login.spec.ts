@@ -40,4 +40,19 @@ test.describe('E-Commerce Login Functionality', () => {
     await expect(page).toHaveURL(/.*route=account\/login/);
     await expect(page.getByText('Warning: No match for E-Mail Address and/or Password.')).toBeVisible();
   });
+
+  test('should display error message related to exceeded login attempts', async ({ page }) => {
+    // Retrieve environment variables securely
+    const email = process.env.USER_EMAIL!;
+    const password = PasswordHelper.generatePassword();
+
+    // Perform login action
+    await loginPage.login(email, password);
+
+    // Enterprise Web Assertion: Asserting user state change
+    // We expect the URL or title to change confirming successful login
+    await expect(page).toHaveTitle('Account Login');
+    await expect(page).toHaveURL(/.*route=account\/login/);
+    await expect(page.getByText('Warning: Your account has exceeded allowed number of login attempts. Please try again in 1 hour.')).toBeVisible();
+  });
 });

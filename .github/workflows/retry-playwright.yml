@@ -1,0 +1,49 @@
+name: Retry Failed Playwright Jobs
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  retry-failed-playwright:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retry recent failed Playwright workflow jobs
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const workflowFile = 'playwright.yml';
+            const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+
+            const { data } = await github.rest.actions.listWorkflowRuns({
+              owner,
+              repo,
+              workflow_id: workflowFile,
+              per_page: 10,
+              status: 'completed'
+            });
+
+            const failedRun = data.workflow_runs.find((run) => {
+              const isRecent = run.updated_at >= oneHourAgo;
+              return isRecent && ['failure', 'timed_out', 'startup_failure', 'cancelled'].includes(run.conclusion);
+            });
+
+            if (!failedRun) {
+              core.info('No recent failed Playwright workflow runs found to retry.');
+              return;
+            }
+
+            await github.rest.actions.reRunFailedJobs({
+              owner,
+              repo,
+              run_id: failedRun.id
+            });
+
+            core.info(`Triggered retry for failed jobs in workflow run ${failedRun.id}.`);
