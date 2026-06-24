@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ruby-thinkbit/Playwright-Boilerplate#readme",
   "devDependencies": {
+    "@playwright/mcp": "^0.0.76",
     "@playwright/test": "^1.61.1",
     "@types/node": "^26.0.0"
   },
